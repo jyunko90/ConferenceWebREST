@@ -148,7 +148,7 @@ namespace ConferenceRESTSystem
             return userId;
         }
 
-        public DataTable getUserDetail(String userId)
+        public DataTable getUserDetail(String UserId)
         {
             DataTable table = new DataTable();
             table.Columns.Add("Email", typeof(String));
@@ -177,7 +177,7 @@ namespace ConferenceRESTSystem
                  + " LEFT JOIN [Gender] AS g on g.GenderId = [User].GenderId"
                  + " LEFT JOIN [Country] AS c on c.CountryId = [User].CountryId"
                  + " LEFT JOIN [Title] AS t on t.TitleId = [User].TitleId"
-                 + " WHERE [User].UserId = " + userId;
+                 + " WHERE [User].UserId = " + UserId;
             SqlCommand command = new SqlCommand(query, dbConnection);
             SqlDataReader reader = command.ExecuteReader();
 
@@ -251,7 +251,8 @@ namespace ConferenceRESTSystem
             return table;
         }
 
-        public DataTable getRegisterEventOption(String conferenceId) {
+        public DataTable getRegisterEventOption(String ConferenceId)
+        {
             if (dbConnection.State.ToString() == "Closed")
             {
                 dbConnection.Open();
@@ -261,7 +262,7 @@ namespace ConferenceRESTSystem
             table.Columns.Add("Fee", typeof(DataTable));
             table.Columns.Add("UserType", typeof(DataTable));
 
-            String query = "SELECT * FROM [Fee] WHERE ConferenceId = " + conferenceId + ";";
+            String query = "SELECT * FROM [Fee] WHERE ConferenceId = " + ConferenceId + ";";
             SqlCommand command = new SqlCommand(query, dbConnection);
             SqlDataReader reader = command.ExecuteReader();
 
@@ -315,14 +316,14 @@ namespace ConferenceRESTSystem
             return table;
         }
 
-        public bool registerEvents(String conferenceId, String feeId, String userId, String userTypeId)
+        public bool registerEvent(String ConferenceId, String FeeId, String UserId, String UserTypeId)
         {
             if (dbConnection.State.ToString() == "Closed")
             {
                 dbConnection.Open();
             }
 
-            String query = "INSERT INTO [Attendees] (ConferenceId, FeeId, UserId, UserTypeId) VALUES (" + conferenceId + "," + feeId + "," + userId + "," + userTypeId + ");";
+            String query = "INSERT INTO [Attendees] (ConferenceId, FeeId, UserId, UserTypeId) VALUES (" + ConferenceId + "," + FeeId + "," + UserId + "," + UserTypeId + ");";
 
             SqlCommand command = new SqlCommand(query, dbConnection);
             int result = command.ExecuteNonQuery();
