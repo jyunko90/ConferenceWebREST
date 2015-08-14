@@ -1,0 +1,8 @@
+c:\users\vc-virtual\documents\visual studio 2012\Projects\ConferenceWebREST\ConferenceWebREST\bin\ConferenceWebREST.dll
+c:\users\vc-virtual\documents\visual studio 2012\Projects\ConferenceWebREST\ConferenceWebREST\bin\ConferenceWebREST.pdb
+c:\users\vc-virtual\documents\visual studio 2012\Projects\ConferenceWebREST\ConferenceWebREST\bin\JsonServices.dll
+c:\users\vc-virtual\documents\visual studio 2012\Projects\ConferenceWebREST\ConferenceWebREST\bin\JsonServices.Web.dll
+c:\users\vc-virtual\documents\visual studio 2012\Projects\ConferenceWebREST\ConferenceWebREST\bin\Newtonsoft.Json.dll
+c:\users\vc-virtual\documents\visual studio 2012\Projects\ConferenceWebREST\ConferenceWebREST\obj\Debug\ConferenceWebREST.dll
+c:\users\vc-virtual\documents\visual studio 2012\Projects\ConferenceWebREST\ConferenceWebREST\obj\Debug\ConferenceWebREST.pdb
+c:\users\vc-virtual\documents\visual studio 2012\Projects\ConferenceWebREST\ConferenceWebREST\obj\Debug\ConferenceWebREST.csprojResolveAssemblyReference.cache
