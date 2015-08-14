@@ -236,7 +236,7 @@ namespace ConferenceRESTSystem
                         reader["Short_Name"], 
                         reader["Date"], 
                         reader["ConferenceVenue"],
-                        reader["Logo"] != null ? Convert.ToBase64String((byte[])reader["Logo"], null)
+                        reader["Logo"] != null ? Convert.ToBase64String((byte[])reader["Logo"]) : null
                     );
                 }
             }
