@@ -99,15 +99,19 @@ namespace ConferenceRESTSystem
             return table;
         }
 
-        public bool signup(String username, String password, String email)
+        public bool signup(String Email, String Username, String TitleId, String FullName, String GenderId, String Instituition, String Faculty, String Department, String ResearchField, String Address, String State, String PostalCode, String CountryId, String PhoneNumber, String FaxNumber, String encryptedPassword)
         {
             if (dbConnection.State.ToString() == "Closed")
             {
                 dbConnection.Open();
             }
 
-            String query = "INSERT INTO [User] (Username, encryptedPassword, Email) VALUES ('" + username + "','" + password + "','" + email + "');";
+            String query = String.Format("INSERT INTO [User] " +
+                " (Email, Username, encryptedPassword, TitleId, FullName, GenderId, Instituition, Faculty, Department, ResearchField, Address, State, PostalCode, CountryId, PhoneNumber, FaxNumber, RegDate, LoggedIn) " +
+                " VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', GETDATE(), 0);",
+                Email, Username, encryptedPassword, TitleId, FullName, GenderId, Instituition, Faculty, Department, ResearchField, Address, State, PostalCode, CountryId, PhoneNumber, FaxNumber);
 
+            System.Diagnostics.Debug.WriteLine(query);
             SqlCommand command = new SqlCommand(query, dbConnection);
             int result = command.ExecuteNonQuery();
 
@@ -116,7 +120,7 @@ namespace ConferenceRESTSystem
             return result > 0;
         }
 
-        public long login(String username, String password)
+        public long login(String Username, String encryptedPassword)
         {
             long userId = -1;
 
@@ -124,8 +128,8 @@ namespace ConferenceRESTSystem
             {
                 dbConnection.Open();
             }
-            
-            String query = "SELECT * FROM [User] WHERE Username='" + username + "' AND encryptedPassword='" + password + "';";
+
+            String query = "SELECT * FROM [User] WHERE Username='" + Username + "' AND encryptedPassword='" + encryptedPassword + "';";
 
             SqlCommand command = new SqlCommand(query, dbConnection);
             SqlDataReader reader = command.ExecuteReader();

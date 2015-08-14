@@ -10,8 +10,8 @@ namespace ConferenceRESTSystem
     public class DBConnect
     {
         private static SqlConnection sqlConnection;
-        //private static string conStr = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
-        private static string conStr = ConfigurationManager.ConnectionStrings["MyDBhost"].ConnectionString;
+        private static string conStr = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+        //private static string conStr = ConfigurationManager.ConnectionStrings["MyDBhost"].ConnectionString;
 
         public static SqlConnection getConnection()
         {
