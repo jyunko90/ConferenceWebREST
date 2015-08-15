@@ -219,7 +219,8 @@ namespace ConferenceRESTSystem
                 dbConnection.Open();
             }
 
-            String query = "SELECT * FROM [Conference];";
+            String query = "SELECT Conference.*, c.WelcomeText AS WelcomeText FROM [Conference] LEFT JOIN [Content] AS c on c.ConferenceId = Conference.ConferenceId;";
+            //String query = "SELECT * FROM [Conference]";
             SqlCommand command = new SqlCommand(query, dbConnection);
             SqlDataReader reader = command.ExecuteReader();
 
@@ -232,6 +233,7 @@ namespace ConferenceRESTSystem
                 table.Columns.Add("Date", typeof(String));
                 table.Columns.Add("ConferenceVenue", typeof(String));
                 table.Columns.Add("Logo", typeof(String));
+                table.Columns.Add("WelcomeText", typeof(String));
 
                 while (reader.Read())
                 {
@@ -240,7 +242,9 @@ namespace ConferenceRESTSystem
                         reader["Short_Name"], 
                         reader["Date"], 
                         reader["ConferenceVenue"],
-                        reader["Logo"] != DBNull.Value ? Convert.ToBase64String((byte[])reader["Logo"]) : null
+                        reader["Logo"] != DBNull.Value ? Convert.ToBase64String((byte[])reader["Logo"]) : null,
+                        //null,
+                        reader["WelcomeText"]
                     );
                 }
             }
