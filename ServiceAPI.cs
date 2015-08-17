@@ -151,22 +151,29 @@ namespace ConferenceRESTSystem
         public DataTable getUserDetail(String UserId)
         {
             DataTable table = new DataTable();
-            table.Columns.Add("Email", typeof(String));
-            table.Columns.Add("Username", typeof(String));
-            table.Columns.Add("FullName", typeof(String));
-            table.Columns.Add("Instituition", typeof(String));
-            table.Columns.Add("Faculty", typeof(String));
-            table.Columns.Add("Department", typeof(String));
-            table.Columns.Add("ResearchField", typeof(String));
-            table.Columns.Add("Address", typeof(String));
-            table.Columns.Add("State", typeof(String));
-            table.Columns.Add("PostalCode", typeof(String));
-            table.Columns.Add("PhoneNumber", typeof(String));
-            table.Columns.Add("FaxNumber", typeof(String));
-            table.Columns.Add("RegDate", typeof(String));
-            table.Columns.Add("Gender", typeof(String));
-            table.Columns.Add("Country", typeof(String));
-            table.Columns.Add("Title", typeof(String));
+            table.Columns.Add("User", typeof(DataTable));
+            table.Columns.Add("Gender", typeof(DataTable));
+            table.Columns.Add("Title", typeof(DataTable));
+            table.Columns.Add("Country", typeof(DataTable));
+
+            DataTable user = new DataTable();
+            user.Columns.Add("Email", typeof(String));
+            user.Columns.Add("Username", typeof(String));
+            user.Columns.Add("FullName", typeof(String));
+            user.Columns.Add("Instituition", typeof(String));
+            user.Columns.Add("Faculty", typeof(String));
+            user.Columns.Add("Department", typeof(String));
+            user.Columns.Add("ResearchField", typeof(String));
+            user.Columns.Add("Address", typeof(String));
+            user.Columns.Add("State", typeof(String));
+            user.Columns.Add("PostalCode", typeof(String));
+            user.Columns.Add("PhoneNumber", typeof(String));
+            user.Columns.Add("FaxNumber", typeof(String));
+            user.Columns.Add("RegDate", typeof(String));
+            user.Columns.Add("Gender", typeof(String));
+            user.Columns.Add("Country", typeof(String));
+            user.Columns.Add("Title", typeof(String));
+            user.Columns.Add("encryptedPassword", typeof(String));
 
             if (dbConnection.State.ToString() == "Closed")
             {
@@ -185,7 +192,7 @@ namespace ConferenceRESTSystem
             {
                 while (reader.Read())
                 {
-                    table.Rows.Add(
+                    user.Rows.Add(
                         reader["Email"],
                         reader["Username"],
                         reader["FullName"],
@@ -201,16 +208,121 @@ namespace ConferenceRESTSystem
                         reader["RegDate"],
                         reader["Gender"],
                         reader["Country"],
-                        reader["Title"]
+                        reader["Title"],
+                        reader["encryptedPassword"]
                     );
                 }
             }
-
             reader.Close();
+
+            query = "SELECT * FROM [Gender];";
+            command = new SqlCommand(query, dbConnection);
+            reader = command.ExecuteReader();
+
+            DataTable gender = new DataTable();
+            if (reader.HasRows)
+            {
+                gender.Columns.Add("GenderId", typeof(String));
+                gender.Columns.Add("Name", typeof(String));
+
+                while (reader.Read())
+                {
+                    gender.Rows.Add(
+                        reader["GenderId"],
+                        reader["Name"]
+                    );
+                }
+            }
+            reader.Close();
+
+            query = "SELECT * FROM [Title];";
+            command = new SqlCommand(query, dbConnection);
+            reader = command.ExecuteReader();
+
+            DataTable title = new DataTable();
+            if (reader.HasRows)
+            {
+                title.Columns.Add("TitleId", typeof(String));
+                title.Columns.Add("Name", typeof(String));
+
+                while (reader.Read())
+                {
+                    title.Rows.Add(
+                        reader["TitleId"],
+                        reader["Name"]
+                    );
+                }
+            }
+            reader.Close();
+
+            query = "SELECT * FROM [Country];";
+            command = new SqlCommand(query, dbConnection);
+            reader = command.ExecuteReader();
+
+            DataTable country = new DataTable();
+            if (reader.HasRows)
+            {
+                country.Columns.Add("CountryId", typeof(String));
+                country.Columns.Add("Name", typeof(String));
+
+                while (reader.Read())
+                {
+                    country.Rows.Add(
+                        reader["CountryId"],
+                        reader["Name"]
+                    );
+                }
+            }
+            reader.Close();
+
+            table.Rows.Add(
+                user,
+                gender,
+                title,
+                country
+            );
+
             dbConnection.Close();
 
             return table;
         }
+
+        public bool changeUserDetail(String UserId, String Email, String Username, String TitleId, String FullName, String GenderId, String Instituition, String Faculty, String Department, String ResearchField, String Address, String State, String PostalCode, String CountryId, String PhoneNumber, String FaxNumber, String encryptedPassword)
+        {
+            if (dbConnection.State.ToString() == "Closed")
+            {
+                dbConnection.Open();
+            }
+
+            String query = String.Format("UPDATE [User] SET " +
+                " Email = '{0}', " +
+                " Username = '{1}', " +
+                " encryptedPassword = '{2}', " +
+                " TitleId = '{3}', " +
+                " FullName = '{4}', " +
+                " GenderId = '{5}', " +
+                " Instituition = '{6}', " +
+                " Faculty = '{7}', " +
+                " Department = '{8}', " +
+                " ResearchField = '{9}', " +
+                " Address = '{10}', " +
+                " State = '{11}', " +
+                " PostalCode = '{12}', " +
+                " CountryId = '{13}', " +
+                " PhoneNumber = '{14}', " +
+                " FaxNumber = '{15}' " +
+                " WHERE UserId = '{16}';",
+                Email, Username, encryptedPassword, TitleId, FullName, GenderId, Instituition, Faculty, Department, ResearchField, Address, State, PostalCode, CountryId, PhoneNumber, FaxNumber, UserId);
+
+            System.Diagnostics.Debug.WriteLine(query);
+            SqlCommand command = new SqlCommand(query, dbConnection);
+            int result = command.ExecuteNonQuery();
+
+            dbConnection.Close();
+
+            return result > 0;
+        }
+
 
         public DataTable getEvents()
         {
@@ -254,6 +366,7 @@ namespace ConferenceRESTSystem
 
             return table;
         }
+
 
         public DataTable getRegisterEventOption(String ConferenceId)
         {
