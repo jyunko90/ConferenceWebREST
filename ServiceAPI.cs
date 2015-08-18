@@ -341,21 +341,38 @@ namespace ConferenceRESTSystem
             if (reader.HasRows)
             {
                 table.Columns.Add("ConferenceId", typeof(long));
-                table.Columns.Add("Short_Name", typeof(String));
+                table.Columns.Add("OrganizerName", typeof(String));
+                table.Columns.Add("Website", typeof(String));
                 table.Columns.Add("Date", typeof(String));
-                table.Columns.Add("ConferenceVenue", typeof(String));
+                table.Columns.Add("ContactName", typeof(String));
+                table.Columns.Add("Contact", typeof(String));
                 table.Columns.Add("Logo", typeof(String));
+                table.Columns.Add("Short_Name", typeof(String));
+                table.Columns.Add("ChairmanName", typeof(String));
+                table.Columns.Add("ChairmanEmail", typeof(String));
+                table.Columns.Add("ConferencePhone", typeof(String));
+                table.Columns.Add("SystemEmail", typeof(String));
+                table.Columns.Add("SecretariatAddress", typeof(String));
+                table.Columns.Add("ConferenceVenue", typeof(String));
                 table.Columns.Add("WelcomeText", typeof(String));
 
                 while (reader.Read())
                 {
                     table.Rows.Add(
-                        reader["ConferenceId"], 
-                        reader["Short_Name"], 
-                        reader["Date"], 
-                        reader["ConferenceVenue"],
+                        reader["ConferenceId"],
+                        reader["OrganizerName"],
+                        reader["Website"],
+                        reader["Date"],
+                        reader["ContactName"],
+                        reader["Contact"], 
                         reader["Logo"] != DBNull.Value ? Convert.ToBase64String((byte[])reader["Logo"]) : null,
-                        //null,
+                        reader["Short_Name"],
+                        reader["ChairmanName"],
+                        reader["ChairmanEmail"],
+                        reader["ConferencePhone"],
+                        reader["SystemEmail"],
+                        reader["SecretariatAddress"],
+                        reader["ConferenceVenue"],
                         reader["WelcomeText"]
                     );
                 }
