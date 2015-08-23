@@ -324,14 +324,15 @@ namespace ConferenceRESTSystem
         }
 
 
-        public DataTable getEvents()
+        public DataTable getEvents(String UserId)
         {
             if (dbConnection.State.ToString() == "Closed")
             {
                 dbConnection.Open();
             }
 
-            String query = "SELECT Conference.*, c.WelcomeText AS WelcomeText FROM [Conference] LEFT JOIN [Content] AS c on c.ConferenceId = Conference.ConferenceId;";
+            String query = "SELECT Conference.*, c.WelcomeText AS WelcomeText, a.AttendeeId AS AttendeeId  FROM [Conference] LEFT JOIN [Content] AS c on c.ConferenceId = Conference.ConferenceId LEFT JOIN [Attendees] AS a on a.ConferenceId = Conference.ConferenceId AND a.UserId = " + UserId;
+            //String query = "SELECT Conference.*, c.WelcomeText AS WelcomeText FROM [Conference] LEFT JOIN [Content] AS c on c.ConferenceId = Conference.ConferenceId;";
             //String query = "SELECT * FROM [Conference]";
             SqlCommand command = new SqlCommand(query, dbConnection);
             SqlDataReader reader = command.ExecuteReader();
