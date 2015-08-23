@@ -389,8 +389,8 @@ namespace ConferenceRESTSystem
                         reader["Date"],
                         reader["ContactName"],
                         reader["Contact"],
-                        null,
-                        //reader["Logo"] != DBNull.Value ? Convert.ToBase64String((byte[])reader["Logo"]) : null,
+                        //null,
+                        reader["Logo"] != DBNull.Value ? Convert.ToBase64String((byte[])reader["Logo"]) : null,
                         reader["Short_Name"],
                         reader["ChairmanName"],
                         reader["ChairmanEmail"],
@@ -398,8 +398,8 @@ namespace ConferenceRESTSystem
                         reader["SystemEmail"],
                         reader["SecretariatAddress"],
                         reader["ConferenceVenue"],
-                        null,
-                        //reader["WelcomeText"],
+                        //null,
+                        reader["WelcomeText"],
                         false
                     );
                 }
