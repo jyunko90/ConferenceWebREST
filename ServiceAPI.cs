@@ -120,7 +120,7 @@ namespace ConferenceRESTSystem
             return result > 0;
         }
 
-        public long login(String Username, String encryptedPassword)
+        public DataTable login(String Username, String encryptedPassword)
         {
             long userId = -1;
 
@@ -130,7 +130,6 @@ namespace ConferenceRESTSystem
             }
 
             String query = "SELECT * FROM [User] WHERE Username='" + Username + "' AND encryptedPassword='" + encryptedPassword + "';";
-
             SqlCommand command = new SqlCommand(query, dbConnection);
             SqlDataReader reader = command.ExecuteReader();
 
@@ -141,11 +140,36 @@ namespace ConferenceRESTSystem
                     userId = Convert.ToInt64(reader["UserId"]);
                 }
             }
-
             reader.Close();
+
+            List<String> conference = new List<String>();
+            if (userId != -1)
+            {
+                query = "SELECT DISTINCT ConferenceId FROM [Attendees] WHERE UserId = " + userId;
+                command = new SqlCommand(query, dbConnection);
+                reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        conference.Add(Convert.ToString(reader["ConferenceId"]));
+                    }
+                }
+                reader.Close();
+            }
+
+            DataTable table = new DataTable();
+            table.Columns.Add("UserId", typeof(long));
+            table.Columns.Add("Event", typeof(List<String>));
+            table.Rows.Add(
+                userId,
+                conference
+            );
+
             dbConnection.Close();
 
-            return userId;
+            return table;
         }
 
         public DataTable getUserDetail(String UserId)
