@@ -356,6 +356,7 @@ namespace ConferenceRESTSystem
                 table.Columns.Add("SecretariatAddress", typeof(String));
                 table.Columns.Add("ConferenceVenue", typeof(String));
                 table.Columns.Add("WelcomeText", typeof(String));
+                table.Columns.Add("AttendeeId", typeof(String));
 
                 while (reader.Read())
                 {
@@ -374,7 +375,8 @@ namespace ConferenceRESTSystem
                         reader["SystemEmail"],
                         reader["SecretariatAddress"],
                         reader["ConferenceVenue"],
-                        reader["WelcomeText"]
+                        reader["WelcomeText"],
+                        reader["AttendeeId"]
                     );
                 }
             }
