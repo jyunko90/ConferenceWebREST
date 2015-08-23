@@ -111,7 +111,6 @@ namespace ConferenceRESTSystem
                 " VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', GETDATE(), 0);",
                 Email, Username, encryptedPassword, TitleId, FullName, GenderId, Instituition, Faculty, Department, ResearchField, Address, State, PostalCode, CountryId, PhoneNumber, FaxNumber);
 
-            System.Diagnostics.Debug.WriteLine(query);
             SqlCommand command = new SqlCommand(query, dbConnection);
             int result = command.ExecuteNonQuery();
 
@@ -338,7 +337,6 @@ namespace ConferenceRESTSystem
                 " WHERE UserId = '{16}';",
                 Email, Username, encryptedPassword, TitleId, FullName, GenderId, Instituition, Faculty, Department, ResearchField, Address, State, PostalCode, CountryId, PhoneNumber, FaxNumber, UserId);
 
-            System.Diagnostics.Debug.WriteLine(query);
             SqlCommand command = new SqlCommand(query, dbConnection);
             int result = command.ExecuteNonQuery();
 
@@ -390,9 +388,9 @@ namespace ConferenceRESTSystem
                         reader["Website"],
                         reader["Date"],
                         reader["ContactName"],
-                        reader["Contact"], 
-                        //null,
-                        reader["Logo"] != DBNull.Value ? Convert.ToBase64String((byte[])reader["Logo"]) : null,
+                        reader["Contact"],
+                        null,
+                        //reader["Logo"] != DBNull.Value ? Convert.ToBase64String((byte[])reader["Logo"]) : null,
                         reader["Short_Name"],
                         reader["ChairmanName"],
                         reader["ChairmanEmail"],
@@ -400,8 +398,8 @@ namespace ConferenceRESTSystem
                         reader["SystemEmail"],
                         reader["SecretariatAddress"],
                         reader["ConferenceVenue"],
-                        //null,
-                        reader["WelcomeText"],
+                        null,
+                        //reader["WelcomeText"],
                         false
                     );
                 }
@@ -415,6 +413,8 @@ namespace ConferenceRESTSystem
                 SqlCommand subcommand = new SqlCommand(subquery, dbConnection);
                 SqlDataReader subreader = subcommand.ExecuteReader();
 
+                Console.WriteLine(subquery);
+                System.Diagnostics.Debug.WriteLine(subquery);
                 row["Attendee"] = subreader.HasRows;
 
                 subreader.Close();
