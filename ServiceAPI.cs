@@ -331,8 +331,8 @@ namespace ConferenceRESTSystem
                 dbConnection.Open();
             }
 
-            String query = "SELECT Conference.*, c.WelcomeText AS WelcomeText, a.AttendeeId AS AttendeeId  FROM [Conference] LEFT JOIN [Content] AS c on c.ConferenceId = Conference.ConferenceId LEFT JOIN [Attendees] AS a on a.ConferenceId = Conference.ConferenceId AND a.UserId = " + UserId;
-            //String query = "SELECT Conference.*, c.WelcomeText AS WelcomeText FROM [Conference] LEFT JOIN [Content] AS c on c.ConferenceId = Conference.ConferenceId;";
+            //String query = "SELECT Conference.*, c.WelcomeText AS WelcomeText, a.AttendeeId AS AttendeeId  FROM [Conference] LEFT JOIN [Content] AS c on c.ConferenceId = Conference.ConferenceId LEFT JOIN [Attendees] AS a on a.ConferenceId = Conference.ConferenceId AND a.UserId = " + UserId;
+            String query = "SELECT Conference.*, c.WelcomeText AS WelcomeText FROM [Conference] LEFT JOIN [Content] AS c on c.ConferenceId = Conference.ConferenceId;";
             //String query = "SELECT * FROM [Conference]";
             SqlCommand command = new SqlCommand(query, dbConnection);
             SqlDataReader reader = command.ExecuteReader();
@@ -356,7 +356,7 @@ namespace ConferenceRESTSystem
                 table.Columns.Add("SecretariatAddress", typeof(String));
                 table.Columns.Add("ConferenceVenue", typeof(String));
                 table.Columns.Add("WelcomeText", typeof(String));
-                table.Columns.Add("AttendeeId", typeof(String));
+                table.Columns.Add("Attendee", typeof(Boolean));
 
                 while (reader.Read())
                 {
@@ -367,6 +367,7 @@ namespace ConferenceRESTSystem
                         reader["Date"],
                         reader["ContactName"],
                         reader["Contact"], 
+                        //null,
                         reader["Logo"] != DBNull.Value ? Convert.ToBase64String((byte[])reader["Logo"]) : null,
                         reader["Short_Name"],
                         reader["ChairmanName"],
@@ -375,13 +376,26 @@ namespace ConferenceRESTSystem
                         reader["SystemEmail"],
                         reader["SecretariatAddress"],
                         reader["ConferenceVenue"],
+                        //null,
                         reader["WelcomeText"],
-                        reader["AttendeeId"]
+                        false
                     );
                 }
             }
 
             reader.Close();
+
+            foreach (DataRow row in table.Rows)
+            {
+                String subquery = "SELECT * FROM Attendees WHERE ConferenceID=" + row["ConferenceId"] + " AND UserId=" + UserId;
+                SqlCommand subcommand = new SqlCommand(subquery, dbConnection);
+                SqlDataReader subreader = subcommand.ExecuteReader();
+
+                row["Attendee"] = subreader.HasRows;
+
+                subreader.Close();
+            }
+
             dbConnection.Close();
 
             return table;
