@@ -144,7 +144,7 @@ namespace ConferenceRESTSystem
             List<String> conference = new List<String>();
             if (userId != -1)
             {
-                query = "SELECT DISTINCT ConferenceId FROM [Attendees] WHERE UserId = " + userId;
+                query = "SELECT DISTINCT ConferenceId FROM [Attendee] WHERE UserId = " + userId;
                 command = new SqlCommand(query, dbConnection);
                 reader = command.ExecuteReader();
 
@@ -351,7 +351,7 @@ namespace ConferenceRESTSystem
                 dbConnection.Open();
             }
 
-            //String query = "SELECT Conference.*, c.WelcomeText AS WelcomeText, a.AttendeeId AS AttendeeId  FROM [Conference] LEFT JOIN [Content] AS c on c.ConferenceId = Conference.ConferenceId LEFT JOIN [Attendees] AS a on a.ConferenceId = Conference.ConferenceId AND a.UserId = " + UserId;
+            //String query = "SELECT Conference.*, c.WelcomeText AS WelcomeText, a.AttendeeId AS AttendeeId  FROM [Conference] LEFT JOIN [Content] AS c on c.ConferenceId = Conference.ConferenceId LEFT JOIN [Attendee] AS a on a.ConferenceId = Conference.ConferenceId AND a.UserId = " + UserId;
             String query = "SELECT Conference.*, c.WelcomeText AS WelcomeText FROM [Conference] LEFT JOIN [Content] AS c on c.ConferenceId = Conference.ConferenceId;";
             //String query = "SELECT * FROM [Conference]";
             SqlCommand command = new SqlCommand(query, dbConnection);
@@ -407,7 +407,7 @@ namespace ConferenceRESTSystem
 
             foreach (DataRow row in table.Rows)
             {
-                String subquery = "SELECT * FROM Attendees WHERE ConferenceID=" + row["ConferenceId"] + " AND UserId=" + UserId;
+                String subquery = "SELECT * FROM Attendee WHERE ConferenceID=" + row["ConferenceId"] + " AND UserId=" + UserId;
                 SqlCommand subcommand = new SqlCommand(subquery, dbConnection);
                 SqlDataReader subreader = subcommand.ExecuteReader();
 
@@ -496,7 +496,7 @@ namespace ConferenceRESTSystem
                 dbConnection.Open();
             }
 
-            String query = "INSERT INTO [Attendees] (ConferenceId, FeeId, UserId, UserTypeId) VALUES (" + ConferenceId + "," + FeeId + "," + UserId + "," + UserTypeId + ");";
+            String query = "INSERT INTO [Attendee] (ConferenceId, FeeId, UserId, UserTypeId) VALUES (" + ConferenceId + "," + FeeId + "," + UserId + "," + UserTypeId + ");";
 
             SqlCommand command = new SqlCommand(query, dbConnection);
             int result = command.ExecuteNonQuery();
