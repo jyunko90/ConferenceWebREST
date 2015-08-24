@@ -362,40 +362,48 @@ namespace ConferenceRESTSystem
             if (reader.HasRows)
             {
                 table.Columns.Add("ConferenceId", typeof(long));
-                table.Columns.Add("OrganizerName", typeof(String));
+                table.Columns.Add("Username", typeof(String));
+                table.Columns.Add("encryptedPassword", typeof(String));
                 table.Columns.Add("Website", typeof(String));
                 table.Columns.Add("Date", typeof(String));
                 table.Columns.Add("ContactName", typeof(String));
                 table.Columns.Add("Contact", typeof(String));
+                table.Columns.Add("PaperPrefix", typeof(String));
+                table.Columns.Add("LoggedIn", typeof(String));
                 table.Columns.Add("Logo", typeof(String));
                 table.Columns.Add("Short_Name", typeof(String));
                 table.Columns.Add("ChairmanName", typeof(String));
                 table.Columns.Add("ChairmanEmail", typeof(String));
                 table.Columns.Add("ConferencePhone", typeof(String));
-                table.Columns.Add("SystemEmail", typeof(String));
                 table.Columns.Add("SecretariatAddress", typeof(String));
+                table.Columns.Add("ConferenceTime", typeof(String));
                 table.Columns.Add("ConferenceVenue", typeof(String));
-                table.Columns.Add("WelcomeText", typeof(String));
-                table.Columns.Add("Attendee", typeof(Boolean));
+                table.Columns.Add("Delete", typeof(String));
+                table.Columns.Add("ConferenceName", typeof(Boolean));
 
                 while (reader.Read())
                 {
                     table.Rows.Add(
                         reader["ConferenceId"],
-                        reader["OrganizerName"],
+                        reader["Username"],
+                        reader["encryptedPassword"],
                         reader["Website"],
                         reader["Date"],
                         reader["ContactName"],
                         reader["Contact"],
+                        reader["PaperPrefix"],
+                        reader["LoggedIn"],
                         //null,
                         reader["Logo"] != DBNull.Value ? Convert.ToBase64String((byte[])reader["Logo"]) : null,
                         reader["Short_Name"],
                         reader["ChairmanName"],
                         reader["ChairmanEmail"],
                         reader["ConferencePhone"],
-                        reader["SystemEmail"],
                         reader["SecretariatAddress"],
+                        reader["ConferenceTime"],
                         reader["ConferenceVenue"],
+                        reader["Delete"],
+                        reader["ConferenceName"],
                         //null,
                         reader["WelcomeText"],
                         false
