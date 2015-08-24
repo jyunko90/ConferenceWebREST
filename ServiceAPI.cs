@@ -379,7 +379,9 @@ namespace ConferenceRESTSystem
                 table.Columns.Add("ConferenceTime", typeof(String));
                 table.Columns.Add("ConferenceVenue", typeof(String));
                 table.Columns.Add("Delete", typeof(String));
-                table.Columns.Add("ConferenceName", typeof(Boolean));
+                table.Columns.Add("ConferenceName", typeof(String));
+                table.Columns.Add("WelcomeText", typeof(String));
+                table.Columns.Add("Delete", typeof(Boolean));
 
                 while (reader.Read())
                 {
