@@ -107,8 +107,8 @@ namespace ConferenceRESTSystem
             }
 
             String query = String.Format("INSERT INTO [User] " +
-                " (Email, Username, encryptedPassword, TitleId, FullName, GenderId, Instituition, Faculty, Department, ResearchField, Address, State, PostalCode, CountryId, PhoneNumber, FaxNumber, RegDate, LoggedIn) " +
-                " VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', GETDATE(), 0);",
+                " (Email, Username, encryptedPassword, TitleId, FullName, GenderId, Instituition, Faculty, Department, ResearchField, Address, State, PostalCode, CountryId, PhoneNumber, FaxNumber, LoggedIn) " +
+                " VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', 0);",
                 Email, Username, encryptedPassword, TitleId, FullName, GenderId, Instituition, Faculty, Department, ResearchField, Address, State, PostalCode, CountryId, PhoneNumber, FaxNumber);
 
             SqlCommand command = new SqlCommand(query, dbConnection);
@@ -192,7 +192,6 @@ namespace ConferenceRESTSystem
             user.Columns.Add("PostalCode", typeof(String));
             user.Columns.Add("PhoneNumber", typeof(String));
             user.Columns.Add("FaxNumber", typeof(String));
-            user.Columns.Add("RegDate", typeof(String));
             user.Columns.Add("Gender", typeof(String));
             user.Columns.Add("Country", typeof(String));
             user.Columns.Add("Title", typeof(String));
@@ -228,7 +227,6 @@ namespace ConferenceRESTSystem
                         reader["PostalCode"],
                         reader["PhoneNumber"],
                         reader["FaxNumber"],
-                        reader["RegDate"],
                         reader["Gender"],
                         reader["Country"],
                         reader["Title"],
