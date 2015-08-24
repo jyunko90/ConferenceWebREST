@@ -415,17 +415,20 @@ namespace ConferenceRESTSystem
 
             reader.Close();
 
-            foreach (DataRow row in table.Rows)
+            if (!String.IsNullOrEmpty(UserId))
             {
-                String subquery = "SELECT * FROM Attendee WHERE ConferenceID=" + row["ConferenceId"] + " AND UserId=" + UserId;
-                SqlCommand subcommand = new SqlCommand(subquery, dbConnection);
-                SqlDataReader subreader = subcommand.ExecuteReader();
+                foreach (DataRow row in table.Rows)
+                {
+                    String subquery = "SELECT * FROM Attendee WHERE ConferenceID=" + row["ConferenceId"] + " AND UserId=" + UserId;
+                    SqlCommand subcommand = new SqlCommand(subquery, dbConnection);
+                    SqlDataReader subreader = subcommand.ExecuteReader();
 
-                Console.WriteLine(subquery);
-                System.Diagnostics.Debug.WriteLine(subquery);
-                row["Attendee"] = subreader.HasRows;
+                    Console.WriteLine(subquery);
+                    System.Diagnostics.Debug.WriteLine(subquery);
+                    row["Attendee"] = subreader.HasRows;
 
-                subreader.Close();
+                    subreader.Close();
+                }
             }
 
             dbConnection.Close();
