@@ -381,7 +381,7 @@ namespace ConferenceRESTSystem
                 table.Columns.Add("Delete", typeof(String));
                 table.Columns.Add("ConferenceName", typeof(String));
                 table.Columns.Add("WelcomeText", typeof(String));
-                table.Columns.Add("Delete", typeof(Boolean));
+                table.Columns.Add("Attendee", typeof(Boolean));
 
                 while (reader.Read())
                 {
