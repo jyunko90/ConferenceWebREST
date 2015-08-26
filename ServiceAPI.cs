@@ -121,7 +121,7 @@ namespace ConferenceRESTSystem
 
         public DataTable login(String Username, String encryptedPassword)
         {
-            long userId = -1;
+            long UserId = -1;
 
             if (dbConnection.State.ToString() == "Closed")
             {
@@ -136,23 +136,26 @@ namespace ConferenceRESTSystem
             {
                 if (reader.Read())
                 {
-                    userId = Convert.ToInt64(reader["UserId"]);
+                    UserId = Convert.ToInt64(reader["UserId"]);
                 }
             }
             reader.Close();
 
-            List<String> conference = new List<String>();
-            if (userId != -1)
+            DataTable events = new DataTable();
+            if (UserId != -1)
             {
-                query = "SELECT DISTINCT ConferenceId FROM [Attendee] WHERE UserId = " + userId;
+                query = "SELECT DISTINCT Conference.*, c.WelcomeText AS WelcomeText  FROM [Conference] LEFT JOIN [Content] AS c on c.ConferenceId = Conference.ConferenceId LEFT JOIN [Attendee] AS a on a.ConferenceId = Conference.ConferenceId WHERE a.UserId = " + UserId;
+                //query = "SELECT DISTINCT ConferenceId FROM [Attendee] WHERE UserId = " + UserId;
                 command = new SqlCommand(query, dbConnection);
                 reader = command.ExecuteReader();
 
                 if (reader.HasRows)
                 {
+                    setEventsDataTable(events);
+
                     while (reader.Read())
                     {
-                        conference.Add(Convert.ToString(reader["ConferenceId"]));
+                        setEventsData(events, reader);
                     }
                 }
                 reader.Close();
@@ -160,10 +163,10 @@ namespace ConferenceRESTSystem
 
             DataTable table = new DataTable();
             table.Columns.Add("UserId", typeof(long));
-            table.Columns.Add("Event", typeof(List<String>));
+            table.Columns.Add("Event", typeof(DataTable));
             table.Rows.Add(
-                userId,
-                conference
+                UserId,
+                events
             );
 
             dbConnection.Close();
@@ -344,6 +347,61 @@ namespace ConferenceRESTSystem
         }
 
 
+        private void setEventsDataTable(DataTable table)
+        {
+            table.Columns.Add("ConferenceId", typeof(long));
+            table.Columns.Add("Username", typeof(String));
+            table.Columns.Add("encryptedPassword", typeof(String));
+            table.Columns.Add("Website", typeof(String));
+            table.Columns.Add("Date", typeof(String));
+            table.Columns.Add("ContactName", typeof(String));
+            table.Columns.Add("Contact", typeof(String));
+            table.Columns.Add("PaperPrefix", typeof(String));
+            table.Columns.Add("LoggedIn", typeof(String));
+            table.Columns.Add("Logo", typeof(String));
+            table.Columns.Add("Short_Name", typeof(String));
+            table.Columns.Add("ChairmanName", typeof(String));
+            table.Columns.Add("ChairmanEmail", typeof(String));
+            table.Columns.Add("ConferencePhone", typeof(String));
+            table.Columns.Add("SecretariatAddress", typeof(String));
+            table.Columns.Add("ConferenceTime", typeof(String));
+            table.Columns.Add("ConferenceVenue", typeof(String));
+            table.Columns.Add("Delete", typeof(String));
+            table.Columns.Add("ConferenceName", typeof(String));
+            table.Columns.Add("WelcomeText", typeof(String));
+            table.Columns.Add("Attendee", typeof(Boolean));
+        }
+
+        private void setEventsData(DataTable table, SqlDataReader reader)
+        {
+            table.Rows.Add(
+                reader["ConferenceId"],
+                reader["Username"],
+                reader["encryptedPassword"],
+                reader["Website"],
+                reader["Date"],
+                reader["ContactName"],
+                reader["Contact"],
+                reader["PaperPrefix"],
+                reader["LoggedIn"],
+    //null,
+                reader["Logo"] != DBNull.Value ? Convert.ToBase64String((byte[])reader["Logo"]) : null,
+                reader["Short_Name"],
+                reader["ChairmanName"],
+                reader["ChairmanEmail"],
+                reader["ConferencePhone"],
+                reader["SecretariatAddress"],
+                reader["ConferenceTime"],
+                reader["ConferenceVenue"],
+                reader["Delete"],
+                reader["ConferenceName"],
+    //null,
+                reader["WelcomeText"],
+                false
+            );
+        }
+
+
         public DataTable getEvents(String UserId)
         {
             if (dbConnection.State.ToString() == "Closed")
@@ -361,55 +419,11 @@ namespace ConferenceRESTSystem
 
             if (reader.HasRows)
             {
-                table.Columns.Add("ConferenceId", typeof(long));
-                table.Columns.Add("Username", typeof(String));
-                table.Columns.Add("encryptedPassword", typeof(String));
-                table.Columns.Add("Website", typeof(String));
-                table.Columns.Add("Date", typeof(String));
-                table.Columns.Add("ContactName", typeof(String));
-                table.Columns.Add("Contact", typeof(String));
-                table.Columns.Add("PaperPrefix", typeof(String));
-                table.Columns.Add("LoggedIn", typeof(String));
-                table.Columns.Add("Logo", typeof(String));
-                table.Columns.Add("Short_Name", typeof(String));
-                table.Columns.Add("ChairmanName", typeof(String));
-                table.Columns.Add("ChairmanEmail", typeof(String));
-                table.Columns.Add("ConferencePhone", typeof(String));
-                table.Columns.Add("SecretariatAddress", typeof(String));
-                table.Columns.Add("ConferenceTime", typeof(String));
-                table.Columns.Add("ConferenceVenue", typeof(String));
-                table.Columns.Add("Delete", typeof(String));
-                table.Columns.Add("ConferenceName", typeof(String));
-                table.Columns.Add("WelcomeText", typeof(String));
-                table.Columns.Add("Attendee", typeof(Boolean));
+                setEventsDataTable(table);
 
                 while (reader.Read())
                 {
-                    table.Rows.Add(
-                        reader["ConferenceId"],
-                        reader["Username"],
-                        reader["encryptedPassword"],
-                        reader["Website"],
-                        reader["Date"],
-                        reader["ContactName"],
-                        reader["Contact"],
-                        reader["PaperPrefix"],
-                        reader["LoggedIn"],
-                        //null,
-                        reader["Logo"] != DBNull.Value ? Convert.ToBase64String((byte[])reader["Logo"]) : null,
-                        reader["Short_Name"],
-                        reader["ChairmanName"],
-                        reader["ChairmanEmail"],
-                        reader["ConferencePhone"],
-                        reader["SecretariatAddress"],
-                        reader["ConferenceTime"],
-                        reader["ConferenceVenue"],
-                        reader["Delete"],
-                        reader["ConferenceName"],
-                        //null,
-                        reader["WelcomeText"],
-                        false
-                    );
+                    setEventsData(table, reader);
                 }
             }
 
