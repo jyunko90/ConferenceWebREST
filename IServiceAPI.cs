@@ -15,7 +15,7 @@ namespace ConferenceRESTSystem
         DataTable getUserDetail(String UserId);
         bool changeUserDetail(String UserId, String Email, String Username, String TitleId, String FullName, String GenderId, String Instituition, String Faculty, String Department, String ResearchField, String Address, String State, String PostalCode, String CountryId, String PhoneNumber, String FaxNumber, String encryptedPassword);
 
-        DataTable getEvents(String UserId);
+        DataTable getConferences(String UserId);
 
         DataTable getRegisterEventOption(String ConferenceId); // get Fee and UserType option used to register event
         bool registerEvent(String ConferenceId, String FeeId, String UserId, String UserTypeId);

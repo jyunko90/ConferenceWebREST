@@ -141,7 +141,7 @@ namespace ConferenceRESTSystem
             }
             reader.Close();
 
-            DataTable events = new DataTable();
+            DataTable conference = new DataTable();
             if (UserId != -1)
             {
                 query = "SELECT DISTINCT Conference.*, c.WelcomeText AS WelcomeText  FROM [Conference] LEFT JOIN [Content] AS c on c.ConferenceId = Conference.ConferenceId LEFT JOIN [Attendee] AS a on a.ConferenceId = Conference.ConferenceId WHERE a.UserId = " + UserId;
@@ -151,22 +151,24 @@ namespace ConferenceRESTSystem
 
                 if (reader.HasRows)
                 {
-                    setEventsDataTable(events);
+                    setConferencesDataTable(conference);
 
                     while (reader.Read())
                     {
-                        setEventsData(events, reader);
+                        setConferencesData(conference, reader);
                     }
                 }
                 reader.Close();
             }
+
+            setConferenceEvents(conference);
 
             DataTable table = new DataTable();
             table.Columns.Add("UserId", typeof(long));
             table.Columns.Add("Event", typeof(DataTable));
             table.Rows.Add(
                 UserId,
-                events
+                conference
             );
 
             dbConnection.Close();
@@ -347,7 +349,7 @@ namespace ConferenceRESTSystem
         }
 
 
-        private void setEventsDataTable(DataTable table)
+        private void setConferencesDataTable(DataTable table)
         {
             table.Columns.Add("ConferenceId", typeof(long));
             table.Columns.Add("Username", typeof(String));
@@ -370,9 +372,10 @@ namespace ConferenceRESTSystem
             table.Columns.Add("ConferenceName", typeof(String));
             table.Columns.Add("WelcomeText", typeof(String));
             table.Columns.Add("Attendee", typeof(Boolean));
+            table.Columns.Add("Event", typeof(DataTable));
         }
 
-        private void setEventsData(DataTable table, SqlDataReader reader)
+        private void setConferencesData(DataTable table, SqlDataReader reader)
         {
             table.Rows.Add(
                 reader["ConferenceId"],
@@ -384,8 +387,8 @@ namespace ConferenceRESTSystem
                 reader["Contact"],
                 reader["PaperPrefix"],
                 reader["LoggedIn"],
-    //null,
-                reader["Logo"] != DBNull.Value ? Convert.ToBase64String((byte[])reader["Logo"]) : null,
+                null,
+                //reader["Logo"] != DBNull.Value ? Convert.ToBase64String((byte[])reader["Logo"]) : null,
                 reader["Short_Name"],
                 reader["ChairmanName"],
                 reader["ChairmanEmail"],
@@ -395,14 +398,64 @@ namespace ConferenceRESTSystem
                 reader["ConferenceVenue"],
                 reader["Delete"],
                 reader["ConferenceName"],
-    //null,
-                reader["WelcomeText"],
-                false
+                null,
+                //reader["WelcomeText"],
+                false,
+                null
+            );
+        }
+
+        private void setConferenceEvents(DataTable table)
+        {
+            foreach (DataRow row in table.Rows)
+            {
+                String subquery = "SELECT * FROM Event WHERE confId=" + row["ConferenceId"];
+                SqlCommand subcommand = new SqlCommand(subquery, dbConnection);
+                SqlDataReader subreader = subcommand.ExecuteReader();
+
+                if (subreader.HasRows)
+                {
+                    DataTable events = new DataTable();
+                    setEventsDataTable(events);
+
+                    while (subreader.Read())
+                    {
+                        setEventsData(events, subreader);
+                    }
+
+                    row["Event"] = events;
+                }
+
+                subreader.Close();
+            }
+        }
+
+        private void setEventsDataTable(DataTable table)
+        {
+            table.Columns.Add("Id", typeof(long));
+            table.Columns.Add("text", typeof(String));
+            table.Columns.Add("start_date", typeof(String));
+            table.Columns.Add("end_date", typeof(String));
+            table.Columns.Add("confId", typeof(long));
+            table.Columns.Add("pId", typeof(long));
+            table.Columns.Add("Venue", typeof(String));
+        }
+
+        private void setEventsData(DataTable table, SqlDataReader reader)
+        {
+            table.Rows.Add(
+                reader["Id"],
+                reader["text"],
+                reader["start_date"],
+                reader["end_date"],
+                reader["confId"],
+                reader["pId"],
+                reader["Venue"]
             );
         }
 
 
-        public DataTable getEvents(String UserId)
+        public DataTable getConferences(String UserId)
         {
             if (dbConnection.State.ToString() == "Closed")
             {
@@ -419,15 +472,17 @@ namespace ConferenceRESTSystem
 
             if (reader.HasRows)
             {
-                setEventsDataTable(table);
+                setConferencesDataTable(table);
 
                 while (reader.Read())
                 {
-                    setEventsData(table, reader);
+                    setConferencesData(table, reader);
                 }
             }
 
             reader.Close();
+
+            setConferenceEvents(table);
 
             if (!String.IsNullOrEmpty(UserId))
             {
